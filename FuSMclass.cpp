@@ -129,14 +129,14 @@ void FuSMclass::AddState( FuSMstate *pNewState )
 	FuzzyState_Map::iterator it;
 
 	// try to find this FuSMstate in the map
-	pState = (this->GetState(pNewState->GetId()));
+	pState = (this->GetState(pNewState->GetID()));
 
 		// if the FuSMstate object pointer is already in the map, return
 		if (pState != NULL)
 			return;
 
 	// otherwise put the FuSMstate object pointer into the map
-	m_map.insert(FSM_VT(pNewState->GetID(), pNewState)
+		m_map.insert(FSM_VT(pNewState->GetID(), pNewState));
 }
 
 //////////////////////////////////////////////////////////////////////

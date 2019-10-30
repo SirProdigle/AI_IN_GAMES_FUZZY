@@ -24,7 +24,12 @@
 class FuSMstate  
 {
  
-	/* SOMETHING GOES HERE*/
+	int m_iStateID;// the unique ID of this state
+	int m_iLowRange;// range of int values to represent membership in this state
+	int m_iHighRange;
+	int m_iValueOfMembership;// current amount of membership, for this fuzzy state
+	int m_iDegreeOfMembership;// current percentage of truth, for this fuzzy state
+
 
 public:
 	FuSMstate( int iStateID, int iLowRange, int iHighRange );

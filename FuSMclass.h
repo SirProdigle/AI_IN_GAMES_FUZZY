@@ -38,7 +38,7 @@ class FuSMstate;
 
 /*typedef HERE*/
 typedef std::map< int, FuSMstate*, std::less<int> > FuzzyState_Map;
-typedef FuzzyState_Map::value_type SM_VT;
+typedef FuzzyState_Map::value_type FSM_VT;
 typedef std::list< FuSMstate* > FuzzyState_List;
 
 
