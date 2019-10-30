@@ -18,12 +18,16 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+
+#include "Memberships.h"
+
+
 //
 // this is the definition of an individual fuzzy state
 //
 class FuSMstate  
 {
- 
+	FuzzyMembership* membership;
 	int m_iStateID;// the unique ID of this state
 	int m_iLowRange;// range of int values to represent membership in this state
 	int m_iHighRange;
