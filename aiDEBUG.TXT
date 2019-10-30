@@ -1,0 +1,8 @@
+starting - aiDEBUG.TXT opened 
+Current state: Uncaring        Input: Player Attacks  Output state: Mad             
+Current state: Mad             Input: Player Attacks  Output state: Mad             
+Current state: Mad             Input: Player Attacks  Output state: Mad             
+Current state: Mad             Input: Player Gone     Output state: Mad             
+Current state: Mad             Input: Monster Hurt    Output state: Rage            
+Current state: Rage            Input: Monster Hurt    Output state: Berserk         
+stopped - aiDEBUG.TXT closed 
