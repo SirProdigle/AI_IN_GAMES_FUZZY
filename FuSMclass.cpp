@@ -36,10 +36,15 @@ void FuSMclass::StateTransition( int iInput )
 	FuzzyState_Map::iterator itM;
 
 	// first clear the membership list
+	if (!m_list.empty())
+	{
+		m_list.clear();
+	}
+	m_itList = m_list.end();
 
 	// accumulate value received, so that input is persistent,
 	// and triggers transitions to new membership fuzzy states
-
+	m_iCurrentInput += iInput;
 	// in this design of an FuSM, we are only allowing positive values
 	// to effect transistions, however this is not a limit of FuSMs
 	if( m_iCurrentInput < 0 )
@@ -48,10 +53,29 @@ void FuSMclass::StateTransition( int iInput )
 		m_iCurrentInput = 100;
 
 	// now iterate through the fuzzy state map using the current input value
+	if (!m_map.empty())
+	{
+		// process the Fuzzy-State_Map m_map member containing all possible states, giving each FuSMstate object an opportunity to effect a transition based on the accumulated input value 
+		for (itM = m_map.begin(); itM != m_map.end(); ++itM)
+		{
+			pState = (FuSMstate *)((*itM).second);
+			if (pState != NULL)
+			{
+				// and store pointer to any membership fuzzy states
+				if (pState->DoTransition(m_iCurrentInput))
+				{
+					m_list.push_back((FuSMstate*)pState);
+				}
+			}
+		}
+	}
+
 
 	// now the m_list contains pointers to all fuzzy states in which membership exists
 	// so set the internal iterator to point to the begining of the list so that we
 	// can iterate through the active states later on using GetNextFuzzyStateMember()
+	m_itList = m_list.begin();
+
 }
 
 //////////////////////////////////////////////////////////////////////
