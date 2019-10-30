@@ -87,13 +87,16 @@ FuSMstate *FuSMclass::GetNextFuzzyStateMember(void)
 {
 	// if the list is empty, or the iterator is pointing to the end
 	// of the list then return a NULL to signal the end has been reached
-
-	// get the pointer to the FuSMstate object that is currently
-	// pointed to by the iterator
-
+	FuSMstate *pState = NULL;
+	if (m_list.empty() || m_itList == m_list.end())
+		return pState;
+	// get the pointer to the FuSMstate object that is currently pointed to by the iterator
+	pState = (FuSMstate*)(*m_itList);
 	// go to the next pointer in the list
-	
+	++m_itList;
 	// and return the one pointer we found
+	return pState;
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -103,6 +106,17 @@ FuSMstate *FuSMclass::GetNextFuzzyStateMember(void)
 
 FuSMstate *FuSMclass::GetState( int iStateID )
 {
+	FuSMstate *pState = NULL;
+	FuzzyState_Map::iterator it;
+
+	// try to find this FuSMstate in the map
+	if (!m_map.empty())
+	{
+		it = m_map.find(iStateID);
+		if (it != m_map.end())
+			pState = (FuSMstate *)((*it).second);
+	}
+	return(pState);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -111,7 +125,18 @@ FuSMstate *FuSMclass::GetState( int iStateID )
 
 void FuSMclass::AddState( FuSMstate *pNewState )
 {
+	FuSMstate *pState = NULL;
+	FuzzyState_Map::iterator it;
 
+	// try to find this FuSMstate in the map
+	SEE GetState()
+
+		// if the FuSMstate object pointer is already in the map, return
+		if (pState != NULL)
+			return;
+
+	// otherwise put the FuSMstate object pointer into the map
+	m_map.insert(FSM_VT(pNewState->GetID(), pNewState)
 }
 
 //////////////////////////////////////////////////////////////////////
