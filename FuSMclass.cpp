@@ -129,7 +129,7 @@ void FuSMclass::AddState( FuSMstate *pNewState )
 	FuzzyState_Map::iterator it;
 
 	// try to find this FuSMstate in the map
-	SEE GetState()
+	pState = (this->GetState(pNewState->GetId()));
 
 		// if the FuSMstate object pointer is already in the map, return
 		if (pState != NULL)
@@ -145,6 +145,19 @@ void FuSMclass::AddState( FuSMstate *pNewState )
 
 void FuSMclass::DeleteState( int iStateID )
 {
+	FuSMstate *pState = NULL;
+	FuzzyState_Map::iterator it;
+
+	// try to find this FuSMstate in the map
+	pState = (this->GetState(iStateID));
+
+		// confirm that the FuSMstate is in the map
+		if (pState != NULL &&
+			pState->GetID() == iStateID)
+		{
+			m_map.erase(it);// remove it from the map
+			delete pState;// delete the object itself
+		}
 
 }
 
