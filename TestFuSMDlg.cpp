@@ -225,31 +225,31 @@ memberships.insert(std::pair<int, int>(STATE_ID_BERSERK, m_pFuSMclass->GetState(
 CString actionText;
 //Bunch of cases now for the memberships
 if (memberships.at(STATE_ID_SAD) >= 50 && memberships.at(STATE_ID_SAD) < 100) {
-	actionText = "Monster Weeps";
+	actionText = "Monster Weeps in place and backs away";
 }
 else if (memberships.at(STATE_ID_ANNOYED) >= 50 && memberships.at(STATE_ID_ANNOYED) < 100) {
-	actionText = "Monster looks visibly annoyed";
+	actionText = "Monster starts squaring up to Player";
 }
 else if (memberships.at(STATE_ID_ANNOYED) <= 50 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
-	actionText = "Monster looks slightly on edge with a tear in it's eye";
+	actionText = "Monsters starts looking at player with a tear in it's eye";
 }
 else if (memberships.at(STATE_ID_ANNOYED) <= 20 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
-	actionText = "Monsters has a tear in it's eye";
+	actionText = "Monster cowers back a little at the player";
 }
 	else if (memberships.at(STATE_ID_MAD) >= 10 && memberships.at(STATE_ID_RAGE) >= 1 && memberships.at(STATE_ID_RAGE) < 10) {
-		actionText = "Monster is getting enraged";
+		actionText = "Monster does a light attack";
 	}
 	else if (memberships.at(STATE_ID_MAD) >= 30) {
-		actionText = "Monster looks mad";
+		actionText = "Monster Prepares to attack the Player";
 	}
 	else if (memberships.at(STATE_ID_MAD) >= 10) {
-		actionText = "Monster looks slightly mad";
+		actionText = "Monster looks for weaknesses in the Player";
 	}
 	else if (memberships.at(STATE_ID_RAGE) >35) {
-		actionText = "Monster looks very enraged";
+		actionText = "Monster does a super heavy attack";
 	}
 	else if (memberships.at(STATE_ID_RAGE) > 10) {
-		actionText = "Monster looks enraged";
+		actionText = "Monster does a heavy attack";
 	}
 	else if (memberships.at(STATE_ID_BERSERK) > 1) {
 		actionText = "Monster goes berserk!";
