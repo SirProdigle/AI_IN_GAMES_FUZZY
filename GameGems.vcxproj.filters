@@ -85,6 +85,9 @@
     <ClInclude Include="TestFuSMDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Memberships.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\GameGems.ico">

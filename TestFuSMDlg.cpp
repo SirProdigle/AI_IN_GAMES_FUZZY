@@ -24,6 +24,21 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 // strings for display of IDs during testing
+#define FUSM_ID_STRING_LENGTH 15
+char* pzFuSMStringIDs[NUMBER_OF_IDS_USED] = {
+"               ",
+"Berserk        ",
+"Raged          ",
+"Mad            ",
+"Annoyed        ",
+"Sad			",	
+"Uncaring       ",
+"Player Seen    ",
+"Player Attacks ",
+"Player Gone    ",
+"Monster Hurt   ",
+"Monster Healed "
+};
 
 #if LOG_FILE
 extern FILE *fpDebug;			// log file
@@ -121,27 +136,69 @@ void TestFuSMDlg::OnSelchangeInputscombo()
 	//
 	// create a discrete "dislike rating" input for action inputs
 	// positive = dislike more, negative = dislike less
+	int iDislikeInput = 0;
+	switch (iID)
+	{
+	case INPUT_ID_PLAYER_SEEN:
+		iDislikeInput = 10;
+		break;
+	case INPUT_ID_PLAYER_ATTACKS:
+		iDislikeInput = 30;
+		break;
+	case INPUT_ID_PLAYER_GONE:
+		iDislikeInput = -10;
+		break;
+	case INPUT_ID_MONSTER_HURT:
+		iDislikeInput = +50;
+		break;
+	case INPUT_ID_MONSTER_HEALED:
+		iDislikeInput = -20;
+	default:
+		break;
+	}
 
 
 	// make sure the active state list box is cleared
 	m_lbStates.ResetContent();
 
 	// apply the fuzzy input value (the "dislike rating" from above)
+	m_pFuSMclass->StateTransition(iDislikeInput);
 
+	FuSMstate *pFuzzyState = NULL;
 	// now fill the active state list box with active states
 	CString sLine;
 	CString sHow;
 	WCHAR szLine[FUSM_ID_STRING_LENGTH*4];
 
-	FuSMstate *pFuzzyState = NULL;
+	pFuzzyState = NULL;
 	while( (pFuzzyState = m_pFuSMclass->GetNextFuzzyStateMember()) != NULL )
 	{
 		// crudely translate the degree of membership into a string description
-		
+		if (pFuzzyState->GetDegreeOfMembership() < 25)
+		{
+			sHow = "is Sort of ";
+		}
+		else if (pFuzzyState->GetDegreeOfMembership() < 50)
+		{
+			sHow = "is Partially ";
+		}
+		else if (pFuzzyState->GetDegreeOfMembership() < 75)
+		{
+			sHow = "is Mostly ";
+		}
+		else if (pFuzzyState->GetDegreeOfMembership() < 99)
+		{
+			sHow = "is Very ";
+		}
+		else
+		{
+			sHow = "is Totally ";
+		}
+
 
 		// construct a line showing degree of membership and name of state
 		CString status = pzFuSMStringIDs[pFuzzyState->GetID()];
-		wsprintf((LPSTR)szLine, TEXT("%d -> %s %s"), pFuzzyState->GetDegreeOfMembership(),
+		wsprintf((LPWSTR)szLine, TEXT("%d -> %s %s"), pFuzzyState->GetDegreeOfMembership(),
 			(const char *)sHow.GetString(), (const char *)status.GetString());
 
 		// and add that line of text to the list box

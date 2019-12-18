@@ -49,8 +49,6 @@ void CChildView::CreateFuSM()
 		throw;
 	}
 
-	// now create FuSMstate objects and initialize FuSMclass with them
-	FuSMstate *pFuSMstate = NULL;
 
 	// NOTE: the fuzzy membership constraints entered below (as ranges)
 	// can be changed per your needs.  The FuSM is set up to deal with
@@ -58,15 +56,24 @@ void CChildView::CreateFuSM()
 	// is left up to the reader.
 	
 	// create the STATE_ID_UNCARING 0 0
-
+	FuSMstate* pFuSMstate = new FuSMstate(STATE_ID_UNCARING, 0, 0);
+	m_pFuSMclass->AddState(pFuSMstate);
+	//SAD
+	FuSMstate* pFuSMstate6 = new FuSMstate(STATE_ID_SAD, 10, 22);
+	m_pFuSMclass->AddState(pFuSMstate6);
 	// create the STATE_ID_ANNOYED 1 24
-
+	FuSMstate* pFuSMstate2 = new FuSMstate(STATE_ID_ANNOYED, 1, 24);
+	m_pFuSMclass->AddState(pFuSMstate2);
 	// create the STATE_ID_MAD 25 49
-
+	FuSMstate* pFuSMstate3 = new FuSMstate(STATE_ID_MAD, 22, 49);
+	m_pFuSMclass->AddState(pFuSMstate3);
 	// create the STATE_ID_RAGE 50 99
-	
+	FuSMstate* pFuSMstate4 = new FuSMstate(STATE_ID_RAGE, 40, 99);
+	m_pFuSMclass->AddState(pFuSMstate4);
 	// create the STATE_ID_BERSERK 100 100
-	
+	FuSMstate* pFuSMstate5 = new FuSMstate(STATE_ID_BERSERK, 100, 100);
+	m_pFuSMclass->AddState(pFuSMstate5);
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

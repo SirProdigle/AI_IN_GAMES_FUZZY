@@ -56,6 +56,8 @@ bool FuSMstate::DoTransition( int iInputValue )
 
 void FuSMstate::GetMembershipRanges( int& iLow, int& iHigh )
 {
+	iLow = m_iLowRange;
+	iHigh = m_iHighRange;
 
 }
 
