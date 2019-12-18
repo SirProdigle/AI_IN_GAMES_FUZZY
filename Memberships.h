@@ -73,6 +73,6 @@ public:
 class TrapezoidalMembership : public FuzzyMembership {
 public:
 	virtual int GetMembership(int amount) {
-		return 60;
+		ASSERT(false); //Placeholder
 	}
 };

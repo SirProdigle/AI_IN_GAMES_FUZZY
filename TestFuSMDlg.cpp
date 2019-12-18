@@ -208,6 +208,58 @@ void TestFuSMDlg::OnSelchangeInputscombo()
 		sHow.Empty();
 		status.Empty();
 	}
+
+
+	//Defuzzify
+	std::map<int, int> memberships = std::map<int, int>();
+
+	memberships.insert(std::pair<int, int>(STATE_ID_UNCARING, m_pFuSMclass->GetState(STATE_ID_UNCARING)->GetDegreeOfMembership()));
+	memberships.insert(std::pair<int,int>(STATE_ID_SAD,m_pFuSMclass->GetState(STATE_ID_SAD)->GetDegreeOfMembership()));
+	memberships.insert(std::pair<int, int>(STATE_ID_ANNOYED, m_pFuSMclass->GetState(STATE_ID_ANNOYED)->GetDegreeOfMembership()));
+	memberships.insert(std::pair<int, int>(STATE_ID_MAD, m_pFuSMclass->GetState(STATE_ID_MAD)->GetDegreeOfMembership()));
+	memberships.insert(std::pair<int, int>(STATE_ID_RAGE, m_pFuSMclass->GetState(STATE_ID_RAGE)->GetDegreeOfMembership()));
+	memberships.insert(std::pair<int, int>(STATE_ID_BERSERK, m_pFuSMclass->GetState(STATE_ID_BERSERK)->GetDegreeOfMembership()));
+	
+
+
+	CString actionText;
+	//Bunch of cases now for the memberships
+	if (memberships.at(STATE_ID_SAD) >= 50 && memberships.at(STATE_ID_SAD) <100) {
+		actionText = "Monster Weeps";
+	}
+	else if (memberships.at(STATE_ID_ANNOYED) >= 50 && memberships.at(STATE_ID_ANNOYED) < 100) {
+		actionText = "Monster looks visibly annoyed";
+	}
+	else if (memberships.at(STATE_ID_ANNOYED) <= 50 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
+		actionText = "Monster looks slightly on edge";
+	}
+	else if (memberships.at(STATE_ID_MAD) >= 10 && memberships.at(STATE_ID_RAGE) >= 1 && memberships.at(STATE_ID_RAGE) < 10) {
+		actionText = "Monster is getting enraged";
+	}
+	else if (memberships.at(STATE_ID_MAD) >= 30) {
+		actionText = "Monster looks mad";
+	}
+	else if (memberships.at(STATE_ID_MAD) >= 10) {
+		actionText = "Monster looks slightly mad";
+	}
+	else if (memberships.at(STATE_ID_RAGE) >35) {
+		actionText = "Monster looks very enraged";
+	}
+	else if (memberships.at(STATE_ID_RAGE) > 10) {
+		actionText = "Monster looks enraged";
+	}
+	else if (memberships.at(STATE_ID_BERSERK) > 1) {
+		actionText = "Monster goes berserk!";
+	}
+
+	wsprintf((LPWSTR)szLine, TEXT("%s"),actionText);
+
+
+
+
+	// and add that line of text to the list box
+	iSel = m_lbStates.AddString((LPCTSTR)szLine);
+
 }
 
 // end of TestFuSMDlg.cpp
