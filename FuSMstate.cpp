@@ -33,14 +33,8 @@ bool FuSMstate::DoTransition( int iInputValue )
 {
 	if (m_iLowRange <= iInputValue && iInputValue <= m_iHighRange)
 	{
-		m_iValueOfMembership = (iInputValue - m_iLowRange) + 1;
-		if (m_iHighRange)
-			m_iDegreeOfMembership = ((m_iValueOfMembership * 100) / m_iHighRange);
-		else
-			m_iDegreeOfMembership = 0;
-		// handle odd case of a crisp fuzzy range of a single value
-		if (m_iValueOfMembership == 1 && m_iLowRange == m_iHighRange)
-			m_iDegreeOfMembership = 100;
+
+		m_iDegreeOfMembership =  this->membership->GetMembership(iInputValue);
 		return true;
 	}
 	// the input is not in membership with this state
@@ -65,7 +59,7 @@ void FuSMstate::GetMembershipRanges( int& iLow, int& iHigh )
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-FuSMstate::FuSMstate( int iStateID, int iLowRange, int iHighRange )
+FuSMstate::FuSMstate( int iStateID, int iLowRange, int iHighRange, std::string membershipType )
 {
 	m_iStateID = iStateID;
 	m_iLowRange = iLowRange;	// range of int values to represent membership in this state
@@ -73,6 +67,19 @@ FuSMstate::FuSMstate( int iStateID, int iLowRange, int iHighRange )
 
 	m_iValueOfMembership = 0;	// zeros indicate this state is not a supporting a membership
 	m_iDegreeOfMembership = 0;	// at this time
+
+	if (membershipType == "Linear") {
+		this->membership = new LinearMembership(std::vector<int>{iLowRange, iHighRange});
+	}
+	else if (membershipType == "Triangular") {
+		this->membership = new TriangularMembership(std::vector<int>{iLowRange, iHighRange - (iHighRange - iLowRange) / 2, iHighRange});
+	}
+	else if (membershipType == "Trapezoidal") {
+		ASSERT(false); //just crash
+	}
+	else {
+		ASSERT(false); //just crash
+	}
 }
 
 FuSMstate::~FuSMstate()

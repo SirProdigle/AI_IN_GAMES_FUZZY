@@ -36,7 +36,7 @@ class FuSMstate
 
 
 public:
-	FuSMstate( int iStateID, int iLowRange, int iHighRange );
+	FuSMstate( int iStateID, int iLowRange, int iHighRange, std::string membershipType );
 	virtual ~FuSMstate();
 
 	// access the state ID

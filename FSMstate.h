@@ -18,6 +18,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "Memberships.h"
 //
 // this is the definition of an individual state, its inputs and transition arrays
 //
@@ -27,10 +28,11 @@ class FSMstate
 	int *m_piInputs;					// input array for tranistions
 	int *m_piOutputState;				// output state array
 	int m_iStateID;						// the unique ID of this state
+	FuzzyMembership* membershipType; //Trapez/triangle etc.
 
 public:
 	// constructor accepts an ID for this state and the number of transitions to support
-	FSMstate( int iStateID, unsigned usTransitions );
+	FSMstate( int iStateID, unsigned usTransitions);
 	// destructor cleans up allocated arrays
 	~FSMstate();
 
