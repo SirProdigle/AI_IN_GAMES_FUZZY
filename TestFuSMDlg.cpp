@@ -137,22 +137,24 @@ void TestFuSMDlg::OnSelchangeInputscombo()
 	// create a discrete "dislike rating" input for action inputs
 	// positive = dislike more, negative = dislike less
 	int iDislikeInput = 0;
+	srand(time(0));
+	int randomNoise = (rand() % 10 +1 ) - 10; // add -5 to 5 random "noise"
 	switch (iID)
 	{
 	case INPUT_ID_PLAYER_SEEN:
-		iDislikeInput = 10;
+		iDislikeInput = 10 + randomNoise;
 		break;
 	case INPUT_ID_PLAYER_ATTACKS:
-		iDislikeInput = 30;
+		iDislikeInput = 30 + randomNoise;
 		break;
 	case INPUT_ID_PLAYER_GONE:
-		iDislikeInput = -10;
+		iDislikeInput = -10 + randomNoise;
 		break;
 	case INPUT_ID_MONSTER_HURT:
-		iDislikeInput = +50;
+		iDislikeInput = +50 + randomNoise;
 		break;
 	case INPUT_ID_MONSTER_HEALED:
-		iDislikeInput = -20;
+		iDislikeInput = -20 + randomNoise;
 	default:
 		break;
 	}
