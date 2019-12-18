@@ -133,106 +133,109 @@ void TestFuSMDlg::OnSelchangeInputscombo()
 	// id (iID above) into a rating input to use later.  You may wish
 	// to deploy a different approach to determine the value of an
 	// input action.
-	//
-	// create a discrete "dislike rating" input for action inputs
-	// positive = dislike more, negative = dislike less
-	int iDislikeInput = 0;
-	srand(time(0));
-	int randomNoise = (rand() % 10 +1 ) - 10; // add -5 to 5 random "noise"
-	switch (iID)
+//
+// create a discrete "dislike rating" input for action inputs
+// positive = dislike more, negative = dislike less
+int iDislikeInput = 0;
+srand(time(0));
+int randomNoise = (rand() % 10 + 1) - 10; // add -5 to 5 random "noise"
+switch (iID)
+{
+case INPUT_ID_PLAYER_SEEN:
+	iDislikeInput = 10 + randomNoise;
+	break;
+case INPUT_ID_PLAYER_ATTACKS:
+	iDislikeInput = 30 + randomNoise;
+	break;
+case INPUT_ID_PLAYER_GONE:
+	iDislikeInput = -10 + randomNoise;
+	break;
+case INPUT_ID_MONSTER_HURT:
+	iDislikeInput = +50 + randomNoise;
+	break;
+case INPUT_ID_MONSTER_HEALED:
+	iDislikeInput = -20 + randomNoise;
+default:
+	break;
+}
+
+
+// make sure the active state list box is cleared
+m_lbStates.ResetContent();
+
+// apply the fuzzy input value (the "dislike rating" from above)
+m_pFuSMclass->StateTransition(iDislikeInput);
+
+FuSMstate *pFuzzyState = NULL;
+// now fill the active state list box with active states
+CString sLine;
+CString sHow;
+WCHAR szLine[FUSM_ID_STRING_LENGTH * 4];
+
+pFuzzyState = NULL;
+while ((pFuzzyState = m_pFuSMclass->GetNextFuzzyStateMember()) != NULL)
+{
+	// crudely translate the degree of membership into a string description
+	if (pFuzzyState->GetDegreeOfMembership() < 25)
 	{
-	case INPUT_ID_PLAYER_SEEN:
-		iDislikeInput = 10 + randomNoise;
-		break;
-	case INPUT_ID_PLAYER_ATTACKS:
-		iDislikeInput = 30 + randomNoise;
-		break;
-	case INPUT_ID_PLAYER_GONE:
-		iDislikeInput = -10 + randomNoise;
-		break;
-	case INPUT_ID_MONSTER_HURT:
-		iDislikeInput = +50 + randomNoise;
-		break;
-	case INPUT_ID_MONSTER_HEALED:
-		iDislikeInput = -20 + randomNoise;
-	default:
-		break;
+		sHow = "is Sort of ";
 	}
-
-
-	// make sure the active state list box is cleared
-	m_lbStates.ResetContent();
-
-	// apply the fuzzy input value (the "dislike rating" from above)
-	m_pFuSMclass->StateTransition(iDislikeInput);
-
-	FuSMstate *pFuzzyState = NULL;
-	// now fill the active state list box with active states
-	CString sLine;
-	CString sHow;
-	WCHAR szLine[FUSM_ID_STRING_LENGTH*4];
-
-	pFuzzyState = NULL;
-	while( (pFuzzyState = m_pFuSMclass->GetNextFuzzyStateMember()) != NULL )
+	else if (pFuzzyState->GetDegreeOfMembership() < 50)
 	{
-		// crudely translate the degree of membership into a string description
-		if (pFuzzyState->GetDegreeOfMembership() < 25)
-		{
-			sHow = "is Sort of ";
-		}
-		else if (pFuzzyState->GetDegreeOfMembership() < 50)
-		{
-			sHow = "is Partially ";
-		}
-		else if (pFuzzyState->GetDegreeOfMembership() < 75)
-		{
-			sHow = "is Mostly ";
-		}
-		else if (pFuzzyState->GetDegreeOfMembership() < 99)
-		{
-			sHow = "is Very ";
-		}
-		else
-		{
-			sHow = "is Totally ";
-		}
-
-
-		// construct a line showing degree of membership and name of state
-		CString status = pzFuSMStringIDs[pFuzzyState->GetID()];
-		wsprintf((LPWSTR)szLine, TEXT("%d -> %s %s"), pFuzzyState->GetDegreeOfMembership(),
-			(const char *)sHow.GetString(), (const char *)status.GetString());
-
-		// and add that line of text to the list box
-		iSel = m_lbStates.AddString((LPCTSTR)szLine);
-		sHow.Empty();
-		status.Empty();
+		sHow = "is Partially ";
+	}
+	else if (pFuzzyState->GetDegreeOfMembership() < 75)
+	{
+		sHow = "is Mostly ";
+	}
+	else if (pFuzzyState->GetDegreeOfMembership() < 99)
+	{
+		sHow = "is Very ";
+	}
+	else
+	{
+		sHow = "is Totally ";
 	}
 
 
-	//Defuzzify
-	std::map<int, int> memberships = std::map<int, int>();
+	// construct a line showing degree of membership and name of state
+	CString status = pzFuSMStringIDs[pFuzzyState->GetID()];
+	wsprintf((LPWSTR)szLine, TEXT("%d -> %s %s"), pFuzzyState->GetDegreeOfMembership(),
+		(const char *)sHow.GetString(), (const char *)status.GetString());
 
-	memberships.insert(std::pair<int, int>(STATE_ID_UNCARING, m_pFuSMclass->GetState(STATE_ID_UNCARING)->GetDegreeOfMembership()));
-	memberships.insert(std::pair<int,int>(STATE_ID_SAD,m_pFuSMclass->GetState(STATE_ID_SAD)->GetDegreeOfMembership()));
-	memberships.insert(std::pair<int, int>(STATE_ID_ANNOYED, m_pFuSMclass->GetState(STATE_ID_ANNOYED)->GetDegreeOfMembership()));
-	memberships.insert(std::pair<int, int>(STATE_ID_MAD, m_pFuSMclass->GetState(STATE_ID_MAD)->GetDegreeOfMembership()));
-	memberships.insert(std::pair<int, int>(STATE_ID_RAGE, m_pFuSMclass->GetState(STATE_ID_RAGE)->GetDegreeOfMembership()));
-	memberships.insert(std::pair<int, int>(STATE_ID_BERSERK, m_pFuSMclass->GetState(STATE_ID_BERSERK)->GetDegreeOfMembership()));
-	
+	// and add that line of text to the list box
+	iSel = m_lbStates.AddString((LPCTSTR)szLine);
+	sHow.Empty();
+	status.Empty();
+}
 
 
-	CString actionText;
-	//Bunch of cases now for the memberships
-	if (memberships.at(STATE_ID_SAD) >= 50 && memberships.at(STATE_ID_SAD) <100) {
-		actionText = "Monster Weeps";
-	}
-	else if (memberships.at(STATE_ID_ANNOYED) >= 50 && memberships.at(STATE_ID_ANNOYED) < 100) {
-		actionText = "Monster looks visibly annoyed";
-	}
-	else if (memberships.at(STATE_ID_ANNOYED) <= 50 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
-		actionText = "Monster looks slightly on edge";
-	}
+//Defuzzify
+std::map<int, int> memberships = std::map<int, int>();
+
+memberships.insert(std::pair<int, int>(STATE_ID_UNCARING, m_pFuSMclass->GetState(STATE_ID_UNCARING)->GetDegreeOfMembership()));
+memberships.insert(std::pair<int, int>(STATE_ID_SAD, m_pFuSMclass->GetState(STATE_ID_SAD)->GetDegreeOfMembership()));
+memberships.insert(std::pair<int, int>(STATE_ID_ANNOYED, m_pFuSMclass->GetState(STATE_ID_ANNOYED)->GetDegreeOfMembership()));
+memberships.insert(std::pair<int, int>(STATE_ID_MAD, m_pFuSMclass->GetState(STATE_ID_MAD)->GetDegreeOfMembership()));
+memberships.insert(std::pair<int, int>(STATE_ID_RAGE, m_pFuSMclass->GetState(STATE_ID_RAGE)->GetDegreeOfMembership()));
+memberships.insert(std::pair<int, int>(STATE_ID_BERSERK, m_pFuSMclass->GetState(STATE_ID_BERSERK)->GetDegreeOfMembership()));
+
+
+
+CString actionText;
+//Bunch of cases now for the memberships
+if (memberships.at(STATE_ID_SAD) >= 50 && memberships.at(STATE_ID_SAD) < 100) {
+	actionText = "Monster Weeps";
+}
+else if (memberships.at(STATE_ID_ANNOYED) >= 50 && memberships.at(STATE_ID_ANNOYED) < 100) {
+	actionText = "Monster looks visibly annoyed";
+}
+else if (memberships.at(STATE_ID_ANNOYED) <= 50 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
+	actionText = "Monster looks slightly on edge with a tear in it's eye";
+}
+else if (memberships.at(STATE_ID_ANNOYED) <= 20 && memberships.at(STATE_ID_SAD) >= 1 && memberships.at(STATE_ID_ANNOYED) > 0) {
+	actionText = "Monsters has a tear in it's eye";
+}
 	else if (memberships.at(STATE_ID_MAD) >= 10 && memberships.at(STATE_ID_RAGE) >= 1 && memberships.at(STATE_ID_RAGE) < 10) {
 		actionText = "Monster is getting enraged";
 	}
